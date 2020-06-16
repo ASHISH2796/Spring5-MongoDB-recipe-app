@@ -1,0 +1,43 @@
+package com.springframework.recipeApp.converters;
+
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
+
+import com.springframework.recipeApp.command.IngredientCommand;
+import com.springframework.recipeApp.model.Ingredient;
+import com.springframework.recipeApp.model.Recipe;
+
+import lombok.Synchronized;
+
+@Component
+public class IngredientCommandToIngredient implements Converter<IngredientCommand, Ingredient> {
+
+	private final UnitOfMeasureCommandToUnitOfMeasure uomConverter;
+
+    public IngredientCommandToIngredient(UnitOfMeasureCommandToUnitOfMeasure uomConverter) {
+        this.uomConverter = uomConverter;
+    }
+	@Synchronized
+	@Nullable
+	@Override
+	public Ingredient convert(IngredientCommand source) {
+	  if(source ==  null) {
+		  return null;
+	  }
+	  final Ingredient ingredient =new Ingredient();
+	  ingredient.setId(source.getId());
+	  ingredient.setAmount(source.getAmount());
+	  ingredient.setDescription(source.getDescription());
+	  ingredient.setUnitOfMeasure(uomConverter.convert(source.getUnitOfMeasure()));
+	  if(source.getRecipeId() != null){
+          Recipe recipe = new Recipe();
+          recipe.setId(source.getRecipeId());
+          ingredient.setRecipe(recipe);
+          recipe.addIngredient(ingredient);
+      }
+		return ingredient;
+	}
+
+
+}
