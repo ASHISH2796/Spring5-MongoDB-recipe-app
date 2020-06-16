@@ -35,7 +35,7 @@ public class IngredientServiceImpl implements IngredientService {
 
 	@Override
 	@Transactional
-	public IngredientCommand findIngredientByRecipeIdandIngredientId(long recipe_id, long ingredient_id) {
+	public IngredientCommand findIngredientByRecipeIdandIngredientId(String recipe_id, String ingredient_id) {
 		Optional<Recipe> recipeOptional = recipeRepository.findById(recipe_id);
 		if(!recipeOptional.isPresent())
 		{
